@@ -9,6 +9,7 @@ const BOT_TOKEN = process.env.BOT_TOKEN;
 const CHANNEL_ID = process.env.CHANNEL_ID;
 const VACANCIES_URL = process.env.VACANCIES_URL;
 const PORT = process.env.PORT;
+const TIME = process.env.TIME || 4;
 
 if (!BOT_TOKEN || !CHANNEL_ID || !VACANCIES_URL) {
     console.error("❌ Ошибка: Заполните .env файл перед запуском!");
@@ -48,10 +49,8 @@ async function fetchAndPostVacancies() {
     }
 }
 
-//Запрос раз в 12 часов (продакшен)
-// cron.schedule("0 */12 * * *", fetchAndPostVacancies);
-// Запрос раз в 15 минут (ТЕСТ) 
-cron.schedule("*/15 * * * *", fetchAndPostVacancies);
+//Запрос раз в TIME часов (продакшен)
+cron.schedule(`0 */${TIME} * * *`, fetchAndPostVacancies);
 
 // Маршрут для тестирования, чтобы запустить бота через Express
 app.get('/', (req, res) => {
