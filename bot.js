@@ -49,8 +49,13 @@ async function fetchAndPostVacancies() {
     }
 }
 
-//Запрос раз в TIME часов (продакшен)
-cron.schedule(`0 */${TIME} * * *`, fetchAndPostVacancies);
+// Запрос раз в 10 минут
+cron.schedule('*/10 * * * *', fetchAndPostVacancies);
+
+// Отправка вакансий в бот раз в час
+cron.schedule('0 * * * *', async () => {
+    await fetchAndPostVacancies();
+});
 
 // Маршрут для тестирования, чтобы запустить бота через Express
 app.get('/', (req, res) => {
