@@ -49,12 +49,16 @@ async function fetchAndPostVacancies() {
     }
 }
 
+// Массив для хранения вакансий
+let vacancies = [];
 // Запрос раз в 10 минут
-cron.schedule('*/10 * * * *', fetchAndPostVacancies);
+cron.schedule('*/10 * * * *', async () => {
+    vacancies = await fetchAndPostVacancies(); // Обновляем вакансии
+});
 
 // Отправка вакансий в бот раз в час
 cron.schedule('0 * * * *', async () => {
-    await fetchAndPostVacancies();
+    await sendVacanciesToBot(vacancies); // Отправляем вакансии в бот
 });
 
 // Маршрут для тестирования, чтобы запустить бота через Express
